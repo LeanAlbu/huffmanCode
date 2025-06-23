@@ -4,11 +4,9 @@ void calculateFrequency(const char* input, char* data, int* freq, int* size) {
     int count[256] = {0};
     *size = 0;
 
-    // Conta a frequência de cada caractere
     for (int i = 0; input[i]; i++)
         count[(unsigned char)input[i]]++;
 
-    // Cria arrays de dados e frequências
     for (int i = 0; i < 256; i++) {
         if (count[i] > 0) {
             data[*size] = (char)i;
@@ -23,10 +21,8 @@ void encodeString(const char* input, const char* outputFile) {
     int freq[256];
     int size = 0;
 
-    // Calcula frequências
     calculateFrequency(input, data, freq, &size);
 
-    // Gera a árvore e os códigos de Huffman
     HuffmanNode* root;
     HuffmanCode* huffCodes = generateHuffmanCodes(data, freq, size, &root);
 
@@ -36,10 +32,8 @@ void encodeString(const char* input, const char* outputFile) {
         strcat(encodedString, huffCodes[(unsigned char)input[i]].code);
     }
 
-    // Salva no arquivo
     saveToFile(outputFile, root, encodedString);
 
-    // Libera memória
     for (int i = 0; i < 256; i++) {
         if (huffCodes[i].code)
             free(huffCodes[i].code);
@@ -61,11 +55,9 @@ int main() {
     fgets(input, sizeof(input), stdin);
     input[strcspn(input, "\n")] = 0;  // Remove a quebra de linha
 
-    // Codifica
     encodeString(input, "saida.huff");
     printf("String codificada e salva em saida.huff\n");
 
-    // Decodifica
     char* decodedString = decodeString("saida.huff");
     if (decodedString) {
         printf("String decodificada: %s\n", decodedString);
